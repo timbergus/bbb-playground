@@ -1,4 +1,4 @@
-CXX=g++
+CXX=clang++-13
 
 TARGET=bbb-playground
 
@@ -7,9 +7,9 @@ APP=$(ROOT)/app
 INCLUDE=$(ROOT)/include
 BIN=bin
 
-CFLAGS=-std=c++17 -Werror -Wall -Wextra
+CFLAGS=-std=c++2b -Werror -Wall -Wextra
 IFLAGS=-I $(INCLUDE) -I /usr/local/include
-LFLAGS=-L /usr/local/lib # -l:librobotcontrol.so.1
+LFLAGS=-L /usr/local/lib -l:librobotcontrol.so.1
 
 OBJS=$(BIN)/main.o
 
