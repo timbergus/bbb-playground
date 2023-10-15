@@ -1,10 +1,11 @@
 #include <iostream>
 #include <fstream>
 #include <ctime>
+#include <signal.h>
 
 #include "board.h"
 
-int main()
+void capture_sample()
 {
   time_t now = time(0);
   
@@ -18,7 +19,7 @@ int main()
   
   auto start = std::chrono::high_resolution_clock::now();
   
-  for (int i = 0; i < 20000; i++)
+  for (int i = 0; i < 10000; i++)
   {
     // std::cout << board.gps_read();
     
@@ -34,6 +35,56 @@ int main()
   board.gps_close();
   
   file.close();
+  
+  rc_led_set(RC_LED_RED, 1);
+  rc_led_set(RC_LED_GREEN, 0);
+}
+
+// Buttons.
+
+int running = 0;
+
+void __on_pause_press(void)
+{
+  rc_led_set(RC_LED_RED, 0);
+  rc_led_set(RC_LED_GREEN, 1);
+  capture_sample();
+  return;
+}
+
+void __on_pause_release(void)
+{
+  // rc_led_set(RC_LED_GREEN, 0);
+  return;
+}
+
+void __signal_handler(__attribute__ ((unused)) int dummy)
+{
+  running = 0;
+  return;
+}
+
+int main()
+{
+  rc_led_set(RC_LED_RED, 1);
+  rc_led_set(RC_LED_GREEN, 0);
+  
+  if(rc_button_init(RC_BTN_PIN_PAUSE, RC_BTN_POLARITY_NORM_HIGH, RC_BTN_DEBOUNCE_DEFAULT_US))
+  {
+    fprintf(stderr,"ERROR: failed to init buttons\n");
+    return -1;
+  }
+  
+  signal(SIGINT, __signal_handler);
+  running = 1;
+  
+  rc_button_set_callbacks(RC_BTN_PIN_PAUSE, __on_pause_press, __on_pause_release);
+  
+  while(running) {
+    rc_usleep(500000);
+  }
+  
+  rc_button_cleanup();
 
   return EXIT_SUCCESS;
 }
