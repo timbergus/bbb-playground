@@ -1,9 +1,16 @@
-cmake_minimum_required(VERSION 3.25.7)
+cmake_minimum_required(VERSION 3.13.4)
 
-project(bbb-playground)
+set(TARGET bbb-playground)
 
-add_definitions("-std=c++2b")
+# set(CMAKE_C_COMPILER "/usr/bin/clang-13")
+# set(CMAKE_CXX_COMPILER "/usr/bin/clang++-13")
 
-add_executable(bbb-playground src/app/main.cpp)
+project(${TARGET})
 
-target_include_directories(bbb-playground PRIVATE src/include)
+add_definitions("-std=c++2a")
+
+add_executable(${TARGET} src/app/main.cpp)
+
+# target_link_libraries(${TARGET} librobotcontrol.so.1.0.5)
+
+target_include_directories(${TARGET} PRIVATE src/include)
