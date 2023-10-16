@@ -19,7 +19,7 @@ void capture_sample()
   
   auto start = std::chrono::high_resolution_clock::now();
   
-  for (int i = 0; i < 10000; i++)
+  for (int i = 0; i < 20000; i++)
   {
     // std::cout << board.gps_read();
     
