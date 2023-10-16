@@ -3,6 +3,9 @@
 #include <ctime>
 #include <signal.h>
 
+#include "core.h"
+#include "color.h"
+
 // #include "board.h"
 // #include "functions.h"
 
@@ -28,8 +31,8 @@ int main()
   }
 
   rc_button_cleanup(); */
-  
-  std::cout << "Hello, world!" << std::endl;
+
+  fmt::print(fmt::emphasis::bold | fg(fmt::color::red), "Elapsed time: {0:.2f} seconds\n", 1.23);
 
   return EXIT_SUCCESS;
 }

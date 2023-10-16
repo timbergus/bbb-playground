@@ -13,4 +13,10 @@ add_executable(${TARGET} src/app/main.cpp)
 
 # target_link_libraries(${TARGET} librobotcontrol.so.1.0.5)
 
+find_package(fmt)
+
+target_include_directories(${TARGET} PRIVATE src/fmt)
+
+target_link_libraries(${TARGET} PRIVATE fmt::fmt-header-only)
+
 target_include_directories(${TARGET} PRIVATE src/include)
