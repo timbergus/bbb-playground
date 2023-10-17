@@ -1,12 +1,4 @@
-#include <iostream>
-#include <fstream>
-#include <ctime>
-#include <signal.h>
-
-#define FMT_HEADER_ONLY
-
-#include "core.h"
-#include "color.h"
+// #include <signal.h>
 
 #include "gps.h"
 
@@ -37,7 +29,7 @@ int main()
   }
 
   rc_button_cleanup(); */
-  
+
   GPS gps;
 
   const auto gpsCallback = [&gps](std::string sample)
@@ -49,8 +41,6 @@ int main()
   };
 
   gps.get_data_stream("./src/data/1697312958.txt", gpsCallback);
-  
-  fmt::print(fmt::emphasis::bold | fg(fmt::color::red), "Elapsed time: {0:.2f} seconds\n", 1.23);
 
   return EXIT_SUCCESS;
 }

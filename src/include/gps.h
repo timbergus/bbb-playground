@@ -1,10 +1,4 @@
-// gps.h
-
-// https://www.gpsworld.com/what-exactly-is-gps-nmea-data
-// http://navspark.mybigcommerce.com/content/NMEA_Format_v0.1.pdf
-
-#ifndef GPS_H
-#define GPS_H
+#pragma once
 
 #include <iostream>
 #include <string>
@@ -19,9 +13,6 @@
 // Maths
 #include <cmath>
 
-#define FMT_HEADER_ONLY
-#include <fmt/format.h>
-
 #include "utils.h"
 #include "rmc.h"
 #include "gsv.h"
@@ -33,8 +24,6 @@
 class GPS
 {
 private:
-  Color palette;
-
   RMC *rmc;
   GSV *gsv;
   GSA *gsa;
@@ -122,5 +111,3 @@ void GPS::get_data_stream(std::string file_name, std::function<void(std::string)
 {
   read_data_stream(file_name, callback);
 }
-
-#endif /* GPS_H */

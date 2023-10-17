@@ -1,20 +1,15 @@
-// gll.h
-
-#ifndef GLL_H
-#define GLL_H
+#pragma once
 
 #include <iostream>
 #include <string>
 #include <vector>
 
-#include "color.h"
 #include "print.h"
 #include "utils.h"
 
 class GLL
 {
 private:
-  Color palette;
   Print printer;
 
   struct gll_t
@@ -99,5 +94,3 @@ void GLL::print_formatted_data()
   printer.print_number("Latitude", Utils::get_latitude(data.latitude));
   printer.print_number("Longitude", Utils::get_longitude(data.longitude, data.longitude_direction));
 }
-
-#endif /* GLL_H */

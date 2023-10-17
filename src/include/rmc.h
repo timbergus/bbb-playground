@@ -1,20 +1,15 @@
-// rmc.h
-
-#ifndef RMC_H
-#define RMC_H
+#pragma once
 
 #include <iostream>
 #include <string>
 #include <vector>
 
-#include "color.h"
 #include "print.h"
 #include "utils.h"
 
 class RMC
 {
 private:
-  Color palette;
   Print printer;
 
   struct rmc_t
@@ -86,5 +81,3 @@ void RMC::print_formatted_data()
   printer.print_number("Longitude", Utils::get_longitude(data.longitude, data.longitude_direction));
   printer.print_number("Speed", Utils::get_speed(data.speed, "ms"), "m/s");
 }
-
-#endif /* RMC_H */

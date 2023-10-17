@@ -1,19 +1,14 @@
-// gsv.h
-
-#ifndef GSV_H
-#define GSV_H
+#pragma once
 
 #include <iostream>
 #include <string>
 #include <vector>
 
-#include "color.h"
 #include "print.h"
 
 class GSV
 {
 private:
-  Color palette;
   Print printer;
 
   struct satellite_t
@@ -70,23 +65,17 @@ GSV::~GSV()
 
 void GSV::print_satellite(satellite_t satellite)
 {
-  std::string separator = palette.set_color(" | ", "red");
-
-  std::string idLabel = palette.set_color("Id: ", "green");
-  std::string elevationLabel = palette.set_color("Elevation: ", "green");
-  std::string azimuthLabel = palette.set_color("Azimuth: ", "green");
-  std::string snrLabel = palette.set_color("SNR: ", "green");
-
-  std::cout << fmt::format("{1} {2} {0} {3} {4} {0} {5} {6} {0} {7} {8}\n",
-                           separator,
-                           idLabel,
-                           satellite.id,
-                           elevationLabel,
-                           satellite.elevation,
-                           azimuthLabel,
-                           satellite.azimuth,
-                           snrLabel,
-                           satellite.snr);
+  fmt::print(
+      "{1} {2} {0} {3} {4} {0} {5} {6} {0} {7} {8}\n",
+      fmt::format(fg(fmt::color::red), "|"),
+      fmt::format(fg(fmt::color::yellow_green), "Id: "),
+      satellite.id,
+      fmt::format(fg(fmt::color::yellow_green), "Elevation: "),
+      satellite.elevation,
+      fmt::format(fg(fmt::color::yellow_green), "Azimuth: "),
+      satellite.azimuth,
+      fmt::format(fg(fmt::color::yellow_green), "SNR: "),
+      satellite.snr);
 }
 
 void GSV::print_data()
@@ -104,5 +93,3 @@ void GSV::print_data()
     print_satellite(data.satellites[i]);
   }
 }
-
-#endif /* GSV_H */

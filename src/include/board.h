@@ -10,18 +10,19 @@
 
 #include <robotcontrol.h>
 
-using namespace std::chrono_literals;
+#define FMT_HEADER_ONLY
+#include "format.h"
 
-// https://blog.mbedded.ninja/programming/operating-systems/linux/linux-serial-ports-using-c-cpp
+using namespace std::chrono_literals;
 
 class Board
 {
 private:
   int port;
   int baudrate;
-  
+
   struct termios tty;
-  
+
   std::map<int, speed_t> baudrates = {
       {9600, B9600},
       {19200, B19200},
@@ -42,11 +43,11 @@ public:
 Board::Board(int port, int baudrate)
 {
   this->baudrate = baudrate;
-  
+
   char port_name[50];
-  
+
   sprintf(port_name, "/dev/ttyO%d", port);
-  
+
   this->port = open(port_name, O_RDWR | O_NOCTTY);
 }
 
@@ -59,7 +60,7 @@ void Board::gps_init()
 {
   if (tcgetattr(port, &tty) != 0)
   {
-    printf("Error %i from tcgetattr: %s\n", errno, strerror(errno));
+    fmt::println("Error {} from tcgetattr: {}", errno, strerror(errno));
   }
 
   cfsetispeed(&tty, baudrates[baudrate]);
@@ -67,7 +68,7 @@ void Board::gps_init()
 
   if (tcsetattr(port, TCSANOW, &tty) != 0)
   {
-    printf("Error %i from tcsetattr: %s\n", errno, strerror(errno));
+    fmt::println("Error {} from tcgetattr: {}", errno, strerror(errno))
   }
 }
 
@@ -78,20 +79,21 @@ std::string Board::gps_read()
   char c = '\0';
 
   read(port, &c, 1);
-  
-  if (c == '$') {
-  
+
+  if (c == '$')
+  {
+
     message += c;
-  
+
     while (c != '\n')
     {
       read(port, &c, 1);
       message += c;
     }
   }
-  
+
   std::this_thread::sleep_for(1ms);
-  
+
   return message;
 }
 

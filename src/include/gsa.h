@@ -1,20 +1,15 @@
-// gsa.h
-
-#ifndef GSA_H
-#define GSA_H
+#pragma once
 
 #include <iostream>
 #include <string>
 #include <vector>
 
-#include "color.h"
 #include "print.h"
 #include "utils.h"
 
 class GSA
 {
 private:
-  Color palette;
   Print printer;
 
   struct gsa_t
@@ -65,5 +60,3 @@ void GSA::print_data()
   printer.print_info("HDOP", data.HDOP);
   printer.print_info("VDOP", data.VDOP);
 }
-
-#endif /* GSA_H */

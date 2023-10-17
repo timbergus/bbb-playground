@@ -1,7 +1,7 @@
-// utils.h
+#pragma once
 
-#ifndef UTILS_H
-#define UTILS_H
+#define FMT_HEADER_ONLY
+#include <format.h>
 
 #include <string>
 #include <vector>
@@ -108,7 +108,7 @@ bool Utils::is_valid_sample(std::string sample)
 
   std::string hex_check;
 
-  hex_check = fmt::format("{0:x}", check);
+  hex_check = fmt::format("{0:X}", check);
 
   return hex_check == fragments[1];
 }
@@ -178,5 +178,3 @@ void Utils::clear_screen()
   std::system("clear");
 #endif
 }
-
-#endif // UTILS_H
