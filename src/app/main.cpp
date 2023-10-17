@@ -3,8 +3,14 @@
 #include <ctime>
 #include <signal.h>
 
+#define FMT_HEADER_ONLY
+
 #include "core.h"
 #include "color.h"
+
+#include "gps.h"
+
+#define SAMPLE_TYPE "GNRMC"
 
 // #include "board.h"
 // #include "functions.h"
@@ -31,7 +37,19 @@ int main()
   }
 
   rc_button_cleanup(); */
+  
+  GPS gps;
 
+  const auto gpsCallback = [&gps](std::string sample)
+  {
+    if (Utils::get_type(sample) == SAMPLE_TYPE)
+    {
+      gps.parse_sample(sample);
+    }
+  };
+
+  gps.get_data_stream("./src/data/1697312958.txt", gpsCallback);
+  
   fmt::print(fmt::emphasis::bold | fg(fmt::color::red), "Elapsed time: {0:.2f} seconds\n", 1.23);
 
   return EXIT_SUCCESS;
