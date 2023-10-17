@@ -1,0 +1,113 @@
+#pragma once
+
+#include <iostream>
+#include <string>
+#include <cstring>
+#include <fstream>
+// #include <ranges>
+#include <vector>
+#include <functional>
+// Sleep.
+#include <chrono>
+#include <thread>
+// Maths
+#include <cmath>
+
+#include "utils.h"
+#include "rmc.h"
+#include "gsv.h"
+#include "gsa.h"
+#include "gll.h"
+
+#include "color.h"
+
+class GPS
+{
+private:
+  RMC *rmc;
+  GSV *gsv;
+  GSA *gsa;
+  GLL *gll;
+
+  void read_data_stream(std::string, std::function<void(std::string)>);
+
+public:
+  GPS();
+  ~GPS();
+
+  void get_data_stream(std::string, std::function<void(std::string)> callback);
+  void parse_sample(std::string);
+};
+
+GPS::GPS()
+{
+}
+
+GPS::~GPS()
+{
+}
+
+void GPS::read_data_stream(std::string file_name, std::function<void(std::string)> callback)
+{
+  int samples = 20000;
+  double time = 1666.71;
+
+  std::fstream measures;
+  std::string measure;
+
+  measures.open(file_name, std::ios::in);
+
+  while (std::getline(measures, measure))
+  {
+    callback(measure);
+    std::this_thread::sleep_for(std::chrono::milliseconds((int)std::ceil(time * 1000 / samples)));
+  }
+}
+
+void GPS::parse_sample(std::string sample)
+{
+  // First we get the checksum.
+
+  std::vector<std::string> initial_split = Utils::split(sample, "*");
+
+  // Then we parse the sample sentence. Even with the empty tokens.
+
+  std::vector<std::string> core_data = Utils::split(initial_split[0], ",");
+
+  std::string type = core_data[0].substr(1);
+
+  core_data.push_back(initial_split[1]);
+
+  if (type == "GNRMC" && Utils::is_valid_sample(sample))
+  {
+    Utils::clear_screen();
+    rmc = new RMC(core_data);
+    rmc->print_formatted_data();
+  }
+
+  if (type == "GPGSV" && Utils::is_valid_sample(sample))
+  {
+    Utils::clear_screen();
+    gsv = new GSV(core_data);
+    gsv->print_data();
+  }
+
+  if (type == "GNGSA" && Utils::is_valid_sample(sample))
+  {
+    Utils::clear_screen();
+    gsa = new GSA(core_data);
+    gsa->print_data();
+  }
+
+  if (type == "GNGLL" && Utils::is_valid_sample(sample))
+  {
+    Utils::clear_screen();
+    gll = new GLL(core_data);
+    gll->print_formatted_data();
+  }
+}
+
+void GPS::get_data_stream(std::string file_name, std::function<void(std::string)> callback)
+{
+  read_data_stream(file_name, callback);
+}
